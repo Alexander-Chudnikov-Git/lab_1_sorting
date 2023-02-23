@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/the_choodick/Desktop/cpp/prog_methods/lab_1_sorting/src/generator/generator.cpp
+generator.hpp
+/Users/the_choodick/Desktop/cpp/prog_methods/lab_1_sorting/src/generator/generator.hpp
+
+/Users/the_choodick/Desktop/cpp/prog_methods/lab_1_sorting/src/generator/generator.hpp
+random
+-
+../model/model.hpp
+/Users/the_choodick/Desktop/cpp/prog_methods/lab_1_sorting/src/model/model.hpp
+
+/Users/the_choodick/Desktop/cpp/prog_methods/lab_1_sorting/src/model/model.hpp
+chrono
+-
+string
+-
+vector
+-
+iomanip
+-
+
