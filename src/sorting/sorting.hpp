@@ -26,12 +26,18 @@
 #include "../model/model.hpp"
 #endif // MODEL_HPP
 
+#include <iostream>
+
 class Sorting
 {
 public:
-	Sorting();
-	~Sorting();
+    static void bubble_sort(std::vector<Model>& model_vector, uint8_t field);
+    static void heap_sort(std::vector<Model>& model_vector, uint8_t field);
+    static void merge_sort(std::vector<Model>& model_vector, uint8_t field, std::size_t left = 0, std::size_t right = 0, bool initial = true);
 
+private:
+    static void make_heap(std::vector<Model>& model_vector, std::size_t index, uint8_t field, std::size_t last_index = 0);
+    static void make_merge(std::vector<Model>& model_vector, uint8_t field, std::size_t left, std::size_t right, std::size_t middle);
 };
 
 #endif // SORTING_HPP

@@ -24,8 +24,11 @@
 
 #include <chrono>
 #include <string>
+#include <cstring> // strcmp has better performance 
 #include <vector>
 #include <iomanip>
+
+#include <bitset>
 
 class ModelComp;
 
@@ -40,6 +43,8 @@ public:
     void set_model(std::string full_name, std::string department, std::string job_title, std::chrono::year_month_day employment_date);
     void set_model(std::string full_name, std::string department, std::string job_title, std::string employment_date);
     void set_decor(std::uint8_t decor_type);
+
+    ModelComp compare_type(const Model& r_model, uint8_t mode);
 
     friend std::ostream& operator<< (std::ostream& stream, const Model& model);
 

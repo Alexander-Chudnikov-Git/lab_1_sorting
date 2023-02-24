@@ -24,6 +24,9 @@
 
 #include <random>
 
+#include <array>
+
+
 #ifndef MODEL_HPP
 #include "../model/model.hpp"
 #endif // MODEL_HPP
@@ -37,10 +40,10 @@ public:
     Model model_generator();
 
 private:
-    std::vector<std::string> _first_name_list;
-    std::vector<std::string> _last_name_list;
-    std::vector<std::string> _department_list;
-    std::vector<std::string> _job_title_list;
+    std::array<std::string, 2738> _first_name_list;
+    std::array<std::string, 1000> _last_name_list;
+    std::array<std::string, 449> _department_list;
+    std::array<std::string, 357> _job_title_list;
     
     std::random_device       _random_device; 
     std::mt19937             _generator;

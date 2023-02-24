@@ -72,6 +72,82 @@ void Model::set_decor(std::uint8_t decor_type)
     this->_decor_type = decor_type;
 }
 
+ModelComp Model::compare_type(const Model& r_model, uint8_t mode)
+{
+    int8_t comp_result;
+    ModelComp model_comp;
+    
+    if (mode > 3)
+    {
+        mode = 0;
+    }
+
+    switch (mode)
+    {
+    case 0:
+        {
+            comp_result = this->_full_name.compare(r_model._full_name);
+            if (comp_result <= 0)
+            {
+                comp_result = 0;
+            }
+            else 
+            {
+                comp_result = 1;
+            }
+            model_comp.set_name_type(comp_result);
+            break;
+        }
+    case 1:
+        {
+            comp_result = this->_department.compare(r_model._department);
+            if (comp_result <= 0)
+            {
+                comp_result = 0;
+            }
+            else 
+            {
+                comp_result = 1;
+            }
+            model_comp.set_dept_type(comp_result);
+            break;
+        }
+    case 2:
+        {
+            comp_result = this->_job_title.compare(r_model._job_title);
+            if (comp_result <= 0)
+            {
+                comp_result = 0;
+            }
+            else 
+            {
+                comp_result = 1;
+            }
+            model_comp.set_jobt_type(comp_result);
+            break;
+        }
+    case 3:
+        {
+            if (this->_employment_date <= r_model._employment_date)
+            {
+                comp_result = 0;
+            }
+            else 
+            {
+                comp_result = 1;
+            }
+            model_comp.set_date_type(comp_result);
+            break;
+        }
+    default:
+        {
+            break;
+        }
+    }
+
+    return model_comp;
+}
+
 std::ostream& operator<< (std::ostream& stream, const Model& model)
 {
     if (model._decor_type == 0)
@@ -163,7 +239,7 @@ ModelComp operator< (const Model& l_model, const Model& r_model)
     uint8_t jobt_comp = 1;
     uint8_t date_comp = 1;
 
-    uint8_t comp_result = l_model._full_name.compare(r_model._full_name);
+    int8_t comp_result = l_model._full_name.compare(r_model._full_name);
 
     if (comp_result >= 0)
     {
@@ -219,21 +295,21 @@ ModelComp operator== (const Model& l_model, const Model& r_model)
     uint8_t jobt_comp = 1;
     uint8_t date_comp = 1;
 
-    uint8_t comp_result = l_model._full_name.compare(r_model._full_name);
+    uint8_t comp_result = std::strcmp(l_model._full_name.c_str(), r_model._full_name.c_str());
 
     if (comp_result != 0)
     {
         name_comp = 0;
     }
 
-    comp_result = l_model._department.compare(r_model._department);
+    comp_result = std::strcmp(l_model._department.c_str(), r_model._department.c_str());
 
     if (comp_result != 0)
     {
         dept_comp = 0;
     }
 
-    comp_result = l_model._job_title.compare(r_model._job_title);
+    comp_result = std::strcmp(l_model._job_title.c_str(), r_model._job_title.c_str());
 
     if (comp_result != 0)
     {
@@ -289,19 +365,19 @@ void ModelComp::set_name_type(uint8_t value)
 
 void ModelComp::set_dept_type(uint8_t value)
 {
-    this->set_type_masked(value << 2, 2);
+    this->set_type_masked(value, 2);
     return;
 }
 
 void ModelComp::set_jobt_type(uint8_t value)
 {
-    this->set_type_masked(value << 4, 4);
+    this->set_type_masked(value, 4);
     return;
 }
 
 void ModelComp::set_date_type(uint8_t value)
 {
-    this->set_type_masked(value << 6, 6);
+    this->set_type_masked(value, 6);
     return;
 }
 
