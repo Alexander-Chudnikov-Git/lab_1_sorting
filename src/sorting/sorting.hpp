@@ -16,8 +16,6 @@
  * @copyright  Copyright 2023 Alexander. All rights reserved. 
  * 
  *             (Not really)
- * 
- * @license    This project is released under the GNUv3 Public License.
  */
 #ifndef SORTING_HPP
 #define SORTING_HPP
@@ -28,6 +26,13 @@
 
 #include <iostream>
 
+/**
+ * @class Sorting
+ *
+ * @brief A class that provides static sorting methods for sorting a vector of Model objects based on a specific field.
+ * 
+ * @note Currently provides implementations for bubble sort, heap sort, and merge sort.
+ */
 class Sorting
 {
 public:

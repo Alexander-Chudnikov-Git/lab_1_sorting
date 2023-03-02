@@ -15,8 +15,9 @@ message("-- C++ compiler is set to ${CMAKE_CXX_COMPILER_ID}")
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_RELEASE ON)
-set(CMAKE_UPX_COMPRESS ON)
+
+option(CMAKE_RELEASE "Build documentation" ON)
+option(CMAKE_UPX_COMPRESS "Build documentation" ON)
 
 set(Boost_USE_STATIC_LIBS ON) 
 set(Boost_USE_MULTITHREADED ON)  
@@ -24,9 +25,11 @@ set(Boost_USE_STATIC_RUNTIME OFF)
 
 find_package(Boost COMPONENTS program_options) 
 
+
+
 if (NOT CMAKE_RELEASE)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
-endif()
+endif ()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic -Wall -Wextra -Wcast-align -Wcast-qual -Wctor-dtor-privacy -Wdisabled-optimization -Wformat=2 -Winit-self -Wmissing-declarations -Wmissing-include-dirs -Woverloaded-virtual -Wredundant-decls -Wshadow -Wsign-promo -Wstrict-overflow=5 -Wswitch-default -Wundef -Werror -Wno-unused -Ofast")
@@ -65,7 +68,6 @@ add_subdirectory(src)
 target_include_directories(${PROJECT_NAME} PUBLIC src/)
 target_link_directories(${PROJECT_NAME} PUBLIC src/)
 target_link_libraries(${PROJECT_NAME} lab_1_sorting_wrapper)
-
 
 if (CMAKE_RELEASE AND CMAKE_UPX_COMPRESS)
 	message(STATUS "Stripping with ${CMAKE_STRIP}")

@@ -16,11 +16,31 @@
  * @copyright  Copyright 2023 Alexander. All rights reserved. 
  * 
  *             (Not really)
- * 
- * @license    This project is released under the GNUv3 Public License.
  */
 #include "sorting.hpp"
 
+
+/**
+ * @brief Sorts the given vector of Model objects using bubble sort algorithm.
+ * 
+ * This function uses bubble sort algorithm to sort the given vector of Model objects
+ * based on the field specified by the `field` parameter. The objects are compared
+ * using the `compare_type()` method of the Model class.
+ * 
+ * @param model_vector The vector of Model objects to be sorted.
+ * @param field The index of the field to be used for sorting the objects.
+ *
+ * @return void.
+ *
+ * @note This function modifies the original vector passed to it.
+ * 
+ * @note The `compare_type()` method of the Model class must return a Type object.
+ * 
+ * @note The Type object must have a method `get_type_masked()` that takes an
+ *       offset and returns a boolean indicating whether the specified bit is set or not.
+ * 
+ * @note This function prints the number of iterations taken to sort the vector.
+ */
 void Sorting::bubble_sort(std::vector<Model>& model_vector, uint8_t field)
 {
     bool has_changed;
@@ -50,6 +70,18 @@ void Sorting::bubble_sort(std::vector<Model>& model_vector, uint8_t field)
     return;
 }
 
+/**
+ * @brief Performs heap sort on a vector of Model objects.
+ * 
+ * This function sorts a vector of Model objects using the heap sort algorithm. The function uses
+ * the make_heap function to create a heap from the input vector, then sorts the heap by repeatedly
+ * extracting the maximum element from the heap and placing it at the end of the vector.
+ * 
+ * @param model_vector The vector of Model objects to be sorted.
+ * @param field The field of the Model object to sort by.
+ *
+ * @return void.
+*/
 void Sorting::heap_sort(std::vector<Model>& model_vector, uint8_t field)
 {
     uint8_t offset = field * 2;
@@ -59,19 +91,31 @@ void Sorting::heap_sort(std::vector<Model>& model_vector, uint8_t field)
         Sorting::make_heap(model_vector, index, field);
     }
   
-    // extracting elements from heap one by one
     for (std::int32_t index = model_vector.size() - 1; index >= 0; --index)
     {
-        // Move current root to end
         std::swap(model_vector[0], model_vector[index]);
-  
-        // again call max heapify on the reduced heap
         Sorting::make_heap(model_vector, 0, field, index);
     }    
 
     return;
 }
 
+/**
+ * @brief Sorts a vector of Model objects using merge sort algorithm.
+ * 
+ * This function sorts a given vector of Model objects using merge sort algorithm.
+ * It takes the field to be sorted as input, along with left and right indices of
+ * the sub-vector to be sorted. If left and right indices are not provided, it sorts
+ * the entire vector by setting left and right indices accordingly.
+ *
+ * @param model_vector The vector of Model objects to be sorted.
+ * @param field The field to be sorted.
+ * @param left The left index of the sub-vector to be sorted (default is 0).
+ * @param right The right index of the sub-vector to be sorted (default is size-1).
+ * @param initial A boolean flag indicating whether this is the initial call to the function (default is true).
+ * 
+ * @return void.
+ */
 void Sorting::merge_sort(std::vector<Model>& model_vector, uint8_t field, std::size_t left, std::size_t right, bool initial)
 {
     if (initial)
@@ -90,8 +134,25 @@ void Sorting::merge_sort(std::vector<Model>& model_vector, uint8_t field, std::s
     Sorting::merge_sort(model_vector, field, left, middle, false);
     Sorting::merge_sort(model_vector, field, middle + 1, right, false);
     Sorting::make_merge(model_vector, field, left, right, middle);
+
+    return;
 }
 
+/**
+ * @brief Builds a heap from a vector of Model objects.
+ * 
+ * This function builds a heap from a vector of Model objects. The function starts at the root node of
+ * a subtree and compares it with its left and right child nodes. If a child node is greater than the root
+ * node, the function swaps the two nodes and continues recursively until the heap property is satisfied
+ * for the entire subtree.
+ * 
+ * @param model_vector The vector of Model objects to build the heap from.
+ * @param index The index of the root node of the subtree to build the heap from.
+ * @param field The field of the Model object to sort by.
+ * @param last_index The last index of the vector to consider when building the heap.
+ * 
+ * @return void.
+ */
 void Sorting::make_heap(std::vector<Model>& model_vector, std::size_t index, uint8_t field, std::size_t last_index)
 {
     std::size_t biggest_index = index;
@@ -119,43 +180,65 @@ void Sorting::make_heap(std::vector<Model>& model_vector, std::size_t index, uin
   
         Sorting::make_heap(model_vector, biggest_index, field, last_index);
     }
+
+    return;
 }
 
-void Sorting::make_merge(std::vector<Model>& model_vector, uint8_t field, size_t left, size_t right, size_t middle)
+/**
+ * @brief Merges two sub-vectors in sorted order.
+ * 
+ * This function is called by the merge_sort function to merge two sub-vectors in
+ * sorted order. It takes the field to be sorted as input, along with the left, right
+ * and middle indices of the sub-vectors to be merged.
+ * 
+ * @param model_vector The vector of Model objects containing the two sub-vectors to be merged.
+ * 
+ * @param field The field to be sorted.
+ * @param left The left index of the first sub-vector.
+ * @param right The right index of the second sub-vector.
+ * @param middle The middle index of the sub-vectors.
+ * 
+ * @return void.
+ */
+void Sorting::make_merge(std::vector<Model>& model_vector, uint8_t field, std::size_t left, std::size_t right, std::size_t middle)
 {
-    if (left >= right || middle < left || middle > right) 
+    std::size_t left_length = middle - left + 1;
+    std::size_t right_length = right - middle;
+
+    std::vector<Model> left_array;
+    std::vector<Model> right_array;
+
+    for (std::size_t index = 0; index < left_length; ++index) 
     {
-        return;
+        left_array.push_back(model_vector.at(left + index));
     }
 
-    if (right == left + 1 && (bool)(model_vector.at(left).compare_type(model_vector.at(right), field)).get_type_masked(field * 2)) 
+    for (std::size_t index = 0; index < right_length; ++index) 
     {
-        std::swap(model_vector[left], model_vector[right]);
-        return;
+        right_array.push_back(model_vector.at(middle + index + 1));
     }
 
-    std::vector<Model> temp_vector(&model_vector[left], &model_vector[left] + (right + 1));
+    std::size_t i = 0, j = 0, k = left;
 
-    for (std::size_t index = left, move = 0, offset = middle - left + 1; index <= right; ++index) 
+    while (i < left_length && j < right_length) 
     {
-        if (move > middle - left) 
-        {      
-            model_vector[index] = temp_vector[offset++];
-        } 
-        else if (offset > right - left) 
+        if ((bool)(right_array.at(j).compare_type(left_array.at(i), field)).get_type_masked(field * 2))
         {
-            model_vector[index] = temp_vector[move++];
+            model_vector[k++] = left_array[i++];
         } 
         else 
         {
-            if ((bool)(model_vector.at(offset).compare_type(model_vector.at(move), field)).get_type_masked(field * 2))
-            {
-                model_vector[index] = temp_vector[move++];
-            }
-            else
-            {
-                model_vector[index] = temp_vector[offset++];
-            }
+            model_vector[k++] = right_array[j++];
         }
+    }
+
+    while (i < left_length) 
+    {
+        model_vector[k++] = left_array[i++];
+    }
+
+    while (j < right_length) 
+    {
+        model_vector[k++] = right_array[j++];
     }
 }

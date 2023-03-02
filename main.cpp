@@ -14,8 +14,6 @@
  * @copyright  Copyright 2023 Alexander. All rights reserved. 
  * 
  *             (Not really)
- * 
- * @license    This project is released under the GNUv3 Public License.
  */
 #include "src/generator/generator.hpp"
 #include "src/sorting/sorting.hpp"

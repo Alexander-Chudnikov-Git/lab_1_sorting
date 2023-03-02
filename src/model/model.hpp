@@ -16,8 +16,6 @@
  * @copyright  Copyright 2023 Alexander. All rights reserved. 
  * 
  *             (Not really)
- * 
- * @license    This project is released under the GNUv3 Public License.
  */
 #ifndef MODEL_HPP
 #define MODEL_HPP
