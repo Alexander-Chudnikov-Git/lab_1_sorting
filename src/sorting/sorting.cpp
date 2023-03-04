@@ -65,7 +65,7 @@ void Sorting::bubble_sort(std::vector<Model>& model_vector, uint8_t field)
     }   
     while (has_changed);
 
-    std::cout << "Sorting took " << iteration_counter << " iterations." << std::endl;
+    //std::cout << "Sorting took " << iteration_counter << " iterations." << std::endl;
 
     return;
 }

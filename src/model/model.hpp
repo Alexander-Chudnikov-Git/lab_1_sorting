@@ -25,6 +25,14 @@
 #include <cstring> // strcmp has better performance 
 #include <vector>
 #include <iomanip>
+#include <iostream>
+
+
+#include <filesystem>
+#include <fstream>
+#include <boost/json.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
 
 #include <bitset>
 
@@ -43,6 +51,10 @@ public:
     void set_decor(std::uint8_t decor_type);
 
     ModelComp compare_type(const Model& r_model, uint8_t mode);
+
+    static void save_model(const std::vector<Model>& model_vector, std::filesystem::path file_path);
+    static void load_model(std::vector<Model>& model_vector, std::filesystem::path file_path);
+    static void print_model(const std::vector<Model>& model_vector);
 
     friend std::ostream& operator<< (std::ostream& stream, const Model& model);
 

@@ -18,6 +18,7 @@
  *             (Not really)
  */
 #include "model.hpp"
+#include <cstddef>
 
 Model::Model(std::string full_name, std::string department, std::string job_title, std::chrono::year_month_day employment_date)
 {
@@ -144,6 +145,107 @@ ModelComp Model::compare_type(const Model& r_model, uint8_t mode)
     }
 
     return model_comp;
+}
+
+void Model::save_model(const std::vector<Model>& model_vector, std::filesystem::path file_path)
+{
+    std::ofstream out(file_path);
+    out << "{\"model_vecotr\":[";
+
+    bool first = true;
+    for (const auto& model : model_vector) 
+    {
+        if (!first) {
+            out << ",";
+        } else {
+            first = false;
+        }
+
+        boost::json::object obj;
+
+        obj.emplace("full_name", model._full_name);
+        obj.emplace("department", model._department);
+        obj.emplace("job_title", model._job_title);
+        obj.emplace("employment_date_year", static_cast<int>(model._employment_date.year()));
+        obj.emplace("employment_date_month", static_cast<unsigned>(model._employment_date.month()));
+        obj.emplace("employment_date_day", static_cast<unsigned>(model._employment_date.day()));
+
+        out << boost::json::serialize(obj);
+    }
+
+    out << "]}";
+    out.close();
+}
+
+void Model::load_model(std::vector<Model>& model_vector, std::filesystem::path file_path) 
+{
+    std::ifstream in(file_path, std::ios::binary);
+    
+    if (!in.is_open()) 
+    {
+        throw std::runtime_error("Failed to open file: " + file_path.string());
+    }
+
+    boost::json::stream_parser parser;
+    char buffer[4096];
+
+    while (in.read(buffer, sizeof(buffer))) 
+    {
+        parser.write(buffer, sizeof(buffer));
+    }
+
+    if (in.gcount() > 0) 
+    {
+        parser.write(buffer, in.gcount());
+    }
+
+    in.close();
+
+    boost::json::value value = parser.release();
+
+    boost::json::object obj = value.as_object();
+    boost::json::array rows = obj["model_vecotr"].as_array();
+
+    model_vector.clear();
+    for (const auto& row : rows) 
+    {
+        boost::json::object obj = row.as_object();
+
+        std::string full_name = obj.at("full_name").as_string().c_str();
+        std::string department = obj.at("department").as_string().c_str();
+        std::string job_title = obj.at("job_title").as_string().c_str();
+        int year = obj.at("employment_date_year").as_int64();
+        unsigned month = obj.at("employment_date_month").as_int64();
+        unsigned day = obj.at("employment_date_day").as_int64();
+
+        std::chrono::year_month_day employment_date = std::chrono::year_month_day(std::chrono::year(year), std::chrono::month(month), std::chrono::day(day));
+
+        model_vector.emplace_back(full_name, department, job_title, employment_date);
+    }
+
+    return;
+}
+
+void Model::print_model(const std::vector<Model>& model_vector)
+{
+    std::cout << Model(3) << std::endl;
+    std::cout << Model(0) << std::endl;
+
+    for (std::size_t index = 0; index < model_vector.size(); ++index)
+    {
+        if (index == model_vector.size() - 1)
+        {
+            Model temp = model_vector.at(index);
+            temp.set_decor(1);
+            std::cout << temp << std::endl;
+        }
+        else 
+        {
+            std::cout << model_vector[index] << std::endl;
+        }
+    }
+
+    std::cout << Model(4) << std::endl;
 }
 
 std::ostream& operator<< (std::ostream& stream, const Model& model)
