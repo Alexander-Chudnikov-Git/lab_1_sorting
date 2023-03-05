@@ -165,7 +165,7 @@ int main(int argc, char const *argv[])
         std::vector<Model> test_model_vector;
 
         // Bubble sorting
-        std::cout << "Buble sorting: " << "\n";  
+        std::cout << "Bubble sorting: " << "\n";  
 
         for (std::size_t iteration = 0; iteration < iterations; ++iteration)
         {
